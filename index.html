@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KaraokeBox — YouTube Karaoke</title>
+<style>
+:root{--bg:#090a12;--panel:#121522;--panel2:#191c2b;--text:#f7f7fb;--muted:#a6abc0;--accent:#ff3cac;--accent2:#784ba0;--line:#292d40;--good:#49e0a2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#28113d 0,transparent 32%),radial-gradient(circle at 100% 20%,#10244b 0,transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input{font:inherit}.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.sidebar{background:rgba(8,9,16,.85);backdrop-filter:blur(18px);border-right:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh}.brand{font-size:23px;font-weight:900;margin:5px 8px 28px}.brand span{color:#ff3cac}.nav{display:grid;gap:7px}.nav button,.sidebtn{background:transparent;border:0;color:var(--muted);text-align:left;padding:13px 14px;border-radius:12px;cursor:pointer}.nav button.active,.nav button:hover,.sidebtn:hover{background:var(--panel2);color:#fff}.sidebox{margin-top:28px;padding:15px;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:16px}.sidebox small{color:var(--muted)}.api-status{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:#777}.dot.ok{background:var(--good);box-shadow:0 0 10px var(--good)}
+main{padding:22px;min-width:0}.top{display:flex;gap:14px;align-items:center}.search{flex:1;display:flex;background:rgba(18,21,34,.9);border:1px solid var(--line);border-radius:15px;overflow:hidden}.search input{flex:1;background:transparent;border:0;outline:0;color:#fff;padding:15px 17px;font-size:16px}.search button,.primary{border:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:800;cursor:pointer}.search button{padding:0 20px}.iconbtn{width:48px;height:48px;border:1px solid var(--line);background:var(--panel);color:#fff;border-radius:13px;cursor:pointer}.hero{margin-top:22px;border:1px solid var(--line);border-radius:24px;padding:28px;background:linear-gradient(120deg,rgba(255,60,172,.16),rgba(120,75,160,.14)),rgba(18,21,34,.9);position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,60,172,.13);right:-50px;top:-80px;filter:blur(10px)}.hero h1{font-size:clamp(28px,5vw,48px);margin:0 0 8px}.hero p{color:var(--muted);margin:0 0 18px;max-width:650px}.hero .primary{padding:12px 18px;border-radius:12px}.section{margin-top:27px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.sectionhead h2{font-size:20px;margin:0}.muted{color:var(--muted);font-size:13px}.chips{display:flex;gap:10px;overflow:auto;padding-bottom:5px}.chip{white-space:nowrap;padding:10px 15px;border:1px solid var(--line);background:var(--panel);color:#ddd;border-radius:999px;cursor:pointer}.chip.active,.chip:hover{background:linear-gradient(135deg,#ff3cac,#784ba0);border-color:transparent;color:white}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:15px}.card{background:rgba(18,21,34,.92);border:1px solid var(--line);border-radius:17px;overflow:hidden;cursor:pointer;transition:.2s;min-width:0}.card:hover{transform:translateY(-3px);border-color:#4b506b}.thumb{aspect-ratio:16/9;background:#1d2030;position:relative}.thumb img{width:100%;height:100%;object-fit:cover}.play{position:absolute;right:10px;bottom:10px;width:40px;height:40px;border:0;border-radius:50%;background:#fff;color:#111;font-weight:900;cursor:pointer}.cardbody{padding:12px}.title{font-weight:750;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.channel{font-size:12px;color:var(--muted);margin-top:7px}.empty{padding:35px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
+.player{position:fixed;inset:auto 20px 20px auto;width:min(720px,calc(100% - 40px));background:#070810;border:1px solid #34384e;border-radius:20px;box-shadow:0 20px 70px #0009;z-index:20;overflow:hidden;display:none}.player.show{display:block}.playerbar{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}.playerbar b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player iframe{width:100%;aspect-ratio:16/9;border:0;display:block}.queue{position:fixed;right:20px;top:20px;width:min(360px,calc(100% - 40px));background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;z-index:30;display:none;max-height:70vh;overflow:auto}.queue.show{display:block}.queueitem{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid var(--line)}.queueitem img{width:72px;height:42px;object-fit:cover;border-radius:7px}.queueitem button{margin-left:auto;background:none;border:0;color:#aaa;cursor:pointer}
+.keyboard{position:fixed;inset:0;background:rgba(4,5,10,.75);backdrop-filter:blur(10px);z-index:50;display:none;align-items:flex-end}.keyboard.show{display:flex}.kbd{width:100%;background:#111422;border-top:1px solid #34384e;padding:14px;box-shadow:0 -20px 70px #000}.kbdtop{display:flex;gap:8px;margin-bottom:12px}.kbdtop input{flex:1;background:#080a11;color:#fff;border:1px solid var(--line);border-radius:11px;padding:12px}.keys{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;max-width:1100px;margin:auto}.key{border:1px solid #30354b;background:#1b1f30;color:#fff;border-radius:9px;min-height:43px;cursor:pointer}.key:active{transform:scale(.96);background:#30364e}.wide{grid-column:span 2}.space{grid-column:span 5}.kbdactions{display:flex;justify-content:center;gap:8px;margin-top:10px}.kbdactions button{padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:#191d2c;color:#fff;cursor:pointer}
+.modal{position:fixed;inset:0;background:#0009;z-index:60;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px}.modalbox input{width:100%;padding:13px;background:#090b12;border:1px solid var(--line);color:#fff;border-radius:10px;margin:9px 0 14px}.modalbox .primary{padding:11px 15px;border-radius:10px}.modalbox p{color:var(--muted);font-size:13px;line-height:1.5}
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:#fff;color:#111;padding:11px 16px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:100}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:800px){.app{display:block}.sidebar{height:auto;position:sticky;z-index:10;padding:10px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:3px 8px 8px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.sidebox{display:none}main{padding:14px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.hero{padding:22px}.keys{grid-template-columns:repeat(8,1fr);gap:5px}.key{min-height:40px}.player{inset:auto 10px 10px;width:calc(100% - 20px)}}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.keys{grid-template-columns:repeat(7,1fr)}.key{font-size:13px}.search button{padding:0 13px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">🎤 Karaoke<span>Box</span></div>
+  <div class="nav">
+    <button class="active" data-view="home">🏠 Beranda</button>
+    <button data-view="search">🔎 Cari Lagu</button>
+    <button data-view="favorite">❤️ Favorit</button>
+    <button data-view="history">🕘 Riwayat</button>
+    <button id="queueBtn">📋 Antrean <b id="queueCount">0</b></button>
+  </div>
+  <div class="sidebox">
+    <b>✨ Pencarian Tanpa API</b>
+    <small>Pencarian menggunakan layanan proxy publik. Tidak perlu Google Cloud Console atau API Key.</small>
+    <div class="api-status"><i class="dot ok" id="apiDot"></i><span id="apiLabel">Mode tanpa API aktif</span></div>
+  </div>
+</aside>
+<main>
+  <div class="top">
+    <div class="search"><input id="searchInput" placeholder="Cari judul lagu, penyanyi, atau karaoke..."><button id="searchBtn">🔎 Cari</button></div>
+    <button class="iconbtn" id="kbdBtn" title="Keyboard">⌨️</button>
+  </div>
+  <section class="hero">
+    <h1>Waktunya karaoke! 🎶</h1>
+    <p>Pilih lagu favoritmu, tampilkan video YouTube, dan nyanyi sepuasnya. Pencarian bekerja tanpa API key. Gunakan keyboard virtual untuk pengalaman karaoke di TV atau tablet.</p>
+    <button class="primary" id="heroSearch">🎤 Mulai Cari Lagu</button>
+  </section>
+  <section class="section">
+    <div class="sectionhead"><h2>🎵 Tipe Lagu</h2><span class="muted">Pilih suasana</span></div>
+    <div class="chips" id="genres"></div>
+  </section>
+  <section class="section">
+    <div class="sectionhead"><h2 id="resultTitle">🔥 Pilihan Karaoke</h2><span class="muted" id="resultInfo"></span></div>
+    <div class="grid" id="results"></div>
+  </section>
+</main>
+</div>
+
+<div class="player" id="player">
+  <div class="playerbar"><b id="playerTitle">Karaoke</b><div><button class="iconbtn" id="favCurrent">♡</button><button class="iconbtn" id="closePlayer">✕</button></div></div>
+  <iframe id="ytFrame" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<div class="queue" id="queue">
+  <div class="sectionhead"><h2>📋 Antrean Lagu</h2><button class="iconbtn" id="closeQueue">✕</button></div>
+  <div id="queueItems"></div>
+</div>
+
+<div class="keyboard" id="keyboard">
+  <div class="kbd">
+    <div class="kbdtop"><input id="kbdInput" placeholder="Ketik pencarian..."><button class="primary" id="kbdSearch" style="padding:0 17px;border-radius:10px">Cari</button></div>
+    <div class="keys" id="keys"></div>
+    <div class="kbdactions"><button id="backspace">⌫ Hapus</button><button id="space">Spasi</button><button id="clear">Bersihkan</button><button id="closeKbd">Tutup</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const genres=["Semua","Pop Indonesia","Dangdut","Koplo","Rock","Pop Barat","Nostalgia","Akustik","Religi","K-Pop","J-Pop","Campursari","Karaoke"];
+const state={genre:"Semua", results:[], favorites:JSON.parse(localStorage.getItem("karaoke_favorites")||"[]"), history:JSON.parse(localStorage.getItem("karaoke_history")||"[]"), queue:[], current:null};
+
+const $=s=>document.querySelector(s);
+const toast=m=>{let t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)};
+function save(){localStorage.setItem("karaoke_favorites",JSON.stringify(state.favorites));localStorage.setItem("karaoke_history",JSON.stringify(state.history))}
+function apiStatus(){}
+function renderGenres(){ $("#genres").innerHTML=genres.map(g=>`<button class="chip ${g===state.genre?"active":""}" data-g="${g}">${g}</button>`).join("");document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.genre=b.dataset.g;renderGenres(); if(b.dataset.g==="Semua")loadPopular();else searchYouTube(b.dataset.g+" karaoke")})}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderCards(items){$("#results").innerHTML=items.length?items.map(v=>{let id=v.id?.videoId||v.id;let title=v.snippet?.title||v.title;let channel=v.snippet?.channelTitle||v.channel;let thumb=v.snippet?.thumbnails?.medium?.url||v.thumb||`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;let fav=state.favorites.some(x=>x.id===id);return `<article class="card" data-id="${id}"><div class="thumb"><img src="${thumb}" loading="lazy"><button class="play" data-play="${id}">▶</button></div><div class="cardbody"><div class="title">${esc(title)}</div><div class="channel">${esc(channel)}</div><div style="display:flex;gap:6px;margin-top:10px"><button class="sidebtn" style="padding:6px 9px" data-add="${id}">＋ Antrean</button><button class="sidebtn" style="padding:6px 9px" data-fav="${id}">${fav?"♥":"♡"}</button></div></div></article>`}).join(""):"<div class='empty'>Belum ada lagu. Masukkan YouTube API Key lalu cari lagu.</div>";
+document.querySelectorAll("[data-play]").forEach(b=>b.onclick=e=>{e.stopPropagation();playById(b.dataset.play)});
+document.querySelectorAll("[data-add]").forEach(b=>b.onclick=e=>{e.stopPropagation();addQueue(findItem(b.dataset.add))});
+document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=e=>{e.stopPropagation();toggleFav(findItem(b.dataset.fav));});
+document.querySelectorAll(".card").forEach(c=>c.onclick=()=>playById(c.dataset.id))
+}
+function findItem(id){return state.results.find(x=>(x.id?.videoId||x.id)===id)||state.history.find(x=>x.id===id)||state.favorites.find(x=>x.id===id)}
+function normalize(x){let id=x.id?.videoId||x.id;return{id,snippet:x.snippet||{title:x.title,channelTitle:x.channel},title:x.snippet?.title||x.title,channel:x.snippet?.channelTitle||x.channel,thumb:x.snippet?.thumbnails?.medium?.url||x.thumb}}
+async function searchYouTube(q){
+  $("#resultTitle").textContent="🔎 Hasil pencarian";
+  $("#resultInfo").textContent="Memuat...";
+  $("#results").innerHTML="<div class='empty'>Sedang mencari lagu…</div>";
+  try{
+    const endpoints=[
+      "https://pipedapi.kavin.rocks/search?q="+encodeURIComponent(q+" karaoke")+"&filter=videos",
+      "https://pipedapi.adminforge.de/search?q="+encodeURIComponent(q+" karaoke")+"&filter=videos"
+    ];
+    let j=null,lastErr="";
+    for(const url of endpoints){
+      try{
+        const r=await fetch(url);
+        if(!r.ok) throw Error("HTTP "+r.status);
+        j=await r.json();
+        if(j && Array.isArray(j.items)) break;
+      }catch(e){lastErr=e.message}
+    }
+    if(!j || !Array.isArray(j.items)) throw Error("Layanan pencarian sedang tidak tersedia ("+lastErr+")");
+    state.results=j.items.filter(x=>x.type==="stream"||x.url||x.id).slice(0,24).map(x=>({
+      id:x.url?.split("v=")[1]||x.id,
+      title:x.title||"Tanpa judul",
+      channel:x.uploaderName||x.uploader||"YouTube",
+      thumb:x.thumbnail||"",
+      snippet:{title:x.title||"Tanpa judul",channelTitle:x.uploaderName||x.uploader||"YouTube",thumbnails:{medium:{url:x.thumbnail||""}}}
+    }));
+    $("#resultInfo").textContent=state.results.length+" lagu";
+    renderCards(state.results);
+  }catch(e){
+    $("#results").innerHTML=`<div class="empty">⚠️ ${esc(e.message)}<br><br>Coba lagi beberapa saat atau gunakan kategori lain.</div>`;
+    $("#resultInfo").textContent="";
+  }
+}
+function loadPopular(){state.results=[];$("#resultTitle").textContent="🔥 Pilihan Karaoke";$("#resultInfo").textContent="Cari kategori untuk memuat lagu";renderCards([])}
+function playById(id){let item=findItem(id);if(!item)return;item=normalize(item);state.current=item;$("#playerTitle").textContent=item.title;$("#ytFrame").src=`https://www.youtube.com/embed/${item.id}?autoplay=1&rel=0&modestbranding=1`;$("#player").classList.add("show");state.history=[item,...state.history.filter(x=>x.id!==item.id)].slice(0,50);save();renderCards(state.results)}
+function toggleFav(item){if(!item)return;item=normalize(item);let i=state.favorites.findIndex(x=>x.id===item.id);if(i>=0){state.favorites.splice(i,1);toast("Dihapus dari favorit")}else{state.favorites.unshift(item);toast("Ditambahkan ke favorit")}save();renderCards(state.results)}
+function addQueue(item){if(!item)return;item=normalize(item);if(!state.queue.some(x=>x.id===item.id))state.queue.push(item);renderQueue();toast("Ditambahkan ke antrean")}
+function renderQueue(){$("#queueCount").textContent=state.queue.length;$("#queueItems").innerHTML=state.queue.length?state.queue.map((x,i)=>`<div class="queueitem"><img src="${x.thumb||`https://i.ytimg.com/vi/${x.id}/mqdefault.jpg`}"><div style="min-width:0"><b style="font-size:13px">${esc(x.title)}</b><div class="muted">${esc(x.channel)}</div></div><button data-rm="${i}">✕</button></div>`).join(""):"<div class='empty'>Antrean masih kosong.</div>";document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{state.queue.splice(+b.dataset.rm,1);renderQueue()})}
+
+$("#searchBtn").onclick=()=>searchYouTube($("#searchInput").value.trim()||"karaoke Indonesia");
+$("#searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("#searchBtn").click()});
+$("#heroSearch").onclick=()=>{$("#kbdBtn").click()};
+$("#closePlayer").onclick=()=>{$("#player").classList.remove("show");$("#ytFrame").src=""};
+$("#favCurrent").onclick=()=>toggleFav(state.current);
+$("#queueBtn").onclick=()=>$("#queue").classList.toggle("show");$("#closeQueue").onclick=()=>$("#queue").classList.remove("show");
+
+function setupKeyboard(){let rows=["1234567890","QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];$("#keys").innerHTML=rows.map(r=>[...r].map(k=>`<button class="key">${k}</button>`).join("")).join("");document.querySelectorAll(".key").forEach(k=>k.onclick=()=>{$("#kbdInput").value+=k.textContent});}
+$("#kbdBtn").onclick=()=>{$("#kbdInput").value=$("#searchInput").value;$("#keyboard").classList.add("show");setTimeout(()=>$("#kbdInput").focus(),100)};
+$("#closeKbd").onclick=()=>$("#keyboard").classList.remove("show");
+$("#kbdSearch").onclick=()=>{$let q=$("#kbdInput").value.trim();$("#searchInput").value=q;$("#keyboard").classList.remove("show");if(q)searchYouTube(q)};
+$("#backspace").onclick=()=>{$let x=$("#kbdInput");x.value=x.value.slice(0,-1);x.focus()};
+$("#space").onclick=()=>{$("#kbdInput").value+=" ";$("#kbdInput").focus()};
+$("#clear").onclick=()=>{$("#kbdInput").value="";$("#kbdInput").focus()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("#keyboard").classList.remove("show");$("#queue").classList.remove("show")}});
+
+document.querySelectorAll(".nav button[data-view]").forEach(b=>b.onclick=()=>{let v=b.dataset.view;document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(v==="home")loadPopular();if(v==="search")$("#kbdBtn").click();if(v==="favorite"){state.results=state.favorites;$("#resultTitle").textContent="❤️ Favorit";$("#resultInfo").textContent=state.favorites.length+" lagu";renderCards(state.results)}if(v==="history"){state.results=state.history;$("#resultTitle").textContent="🕘 Riwayat";$("#resultInfo").textContent=state.history.length+" lagu";renderCards(state.results)}});
+
+renderGenres();setupKeyboard();loadPopular();
+</script>
+</body>
+</html>
